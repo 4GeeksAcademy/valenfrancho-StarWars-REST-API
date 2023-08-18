@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, Characters, Planets, Starship
 #from models import Person
 
 app = Flask(__name__)
@@ -36,6 +36,9 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
+
+# code starts here
+
 @app.route('/user', methods=['GET'])
 def handle_hello():
 
@@ -44,6 +47,56 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+@app.route('/characters/<int:characters_id>', methods=['PUT', 'GET'])
+def get_single_person(characters):
+    """
+    Single person
+    """
+    body = request.get_json()  # Input: {'username': 'new_username'}
+    if request.method == 'PUT':
+        user1 = Characters.query.get(characters)
+        user1.username = body.username
+        db.session.commit()
+        return jsonify(user1.serialize()), 200
+    if request.method == 'GET':
+        user1 = Characters.query.get(characters_id)
+        return jsonify(user1.serialize()), 200
+    return "Invalid Method", 404
+
+@app.route('/planets/<int:planets_id>', methods=['PUT', 'GET'])
+def get_single_planets(planets):
+    """
+    Single planets
+    """
+    body = request.get_json()  # Input: {'username': 'new_username'}
+    if request.method == 'PUT':
+        user1 = Planets.query.get(planets)
+        user1.username = body.username
+        db.session.commit()
+        return jsonify(user1.serialize()), 200
+    if request.method == 'GET':
+        user1 = Planets.query.get(planets_id)
+        return jsonify(user1.serialize()), 200
+    return "Invalid Method", 404
+
+@app.route('/starship/<int:starship_id>', methods=['PUT', 'GET'])
+def get_single_starship(starship):
+    """
+    Single starship
+    """
+    body = request.get_json()  # Input: {'username': 'new_username'}
+    if request.method == 'PUT':
+        user1 = Starship.query.get(starship)
+        user1.username = body.username
+        db.session.commit()
+        return jsonify(user1.serialize()), 200
+    if request.method == 'GET':
+        user1 = Starship.query.get(starship_id)
+        return jsonify(user1.serialize()), 200
+    return "Invalid Method", 404
+
+# code ends here
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
